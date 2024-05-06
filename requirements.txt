@@ -4,3 +4,6 @@ python-decouple
 djangorestframework-simpleJWT
 django-filter
 drf-yasg
+python-slugify
+
+

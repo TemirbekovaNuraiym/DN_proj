@@ -68,12 +68,14 @@ ADITIONAL_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'drf_yasg',
+    
 ]
 
 
 OWN_APPS = [
     'account',
     'order',
+    'product',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + ADITIONAL_APPS + OWN_APPS
