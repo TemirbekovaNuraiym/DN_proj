@@ -1,52 +1,51 @@
-from typing import Any
 from django.db import models
-
-from django.contrib.auth.models import AbstractUser
 from django.utils.crypto import get_random_string
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 
-class UserManager(BaseUserManager): # создание всех юзеров без разницы
+
+class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra):
-        if not email: # ошибка при не указании email
-            raise ValueError('укажите email')
+        if not email:
+            raise ValueError("Email field is required")            
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra) # достаем юзера
-        user.set_password(password) #хешируем password (видоизменяем)
+        user = self.model(email=email, **extra)
+        user.set_password(password)
         user.save()
         return user
-    
 
-    def create_user(self, email, password, **extra): # создание обычного юзера
+    def create_user(self, email, password, **extra):
         user = self._create_user(email, password, **extra)
-        user.create_activation_code() # активационный код
-        user.save() # для добавления в БД
+        user.create_activation_code()
+        user.save()
         return user
-    
 
-    def create_superuser(self, email, password, **extra): # создание суперюзера
-        extra.setdefault('is_active', True)
-        extra.setdefault('is_staff', True)
-        extra.setdefault('is_superuser', True) # дали все привелегии 
-        user = self._create_user(email, password, **extra) # создается юзер
+    def create_superuser(self, email, password, **extra):
+        extra.setdefault("is_staff", True)
+        extra.setdefault("is_active", True)
+        extra.setdefault("is_superuser", True)
+        user = self._create_user(email, password, **extra)
         return user
-    
 
+  
 class User(AbstractUser):
     username = None
-    email = models.EmailField(unique=True)
-    is_active = models.BooleanField(default=False)
-    activation_code = models.CharField(max_length=11, blank=True)
+    email = models.EmailField(unique=True, verbose_name='Почта')
+    is_active = models.BooleanField(default=False, verbose_name='Активен')
+    activation_code = models.CharField(max_length=10, blank=True)
 
-
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
-        
-    def __str__(self) -> str:
+
+    def str(self):
         return self.email
-        
+
     def create_activation_code(self):
-        code = get_random_string(length=11, 
-                                     allowed_chars='0123456789')
+        code = get_random_string(length=10, allowed_chars="1234567890")
         self.activation_code = code
+    
+    class Meta:
+        verbose_name = "Пользователя" 
+        verbose_name_plural = "Пользователи" 

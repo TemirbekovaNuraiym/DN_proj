@@ -1,12 +1,24 @@
-from django.urls import path, include
+
+from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import RegisterView, ActivateView
+from .views import RegisterView, ActivationView, PasswordReset, PasswordResetView, UserListView
+
 
 urlpatterns = [
-    path('register/', RegisterView.as_view()),
-    path('activate/<str:email>/<str:activation_code>/', ActivateView.as_view(), name='activate'),
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
+    path("register/", RegisterView.as_view()),
+    path(
+        "activate/<str:email>/<str:activation_code>/",
+        ActivationView.as_view(),
+        name="activate",
+    ),
+    path("login/", TokenObtainPairView.as_view()),
+    path("refresh/", TokenRefreshView.as_view()),
+    path("password_reset/", PasswordReset.as_view()),
+    path(
+        "password_reset/<str:pk>/<str:token>/",
+        PasswordResetView.as_view(),
+        name="password_reset",
+    ),
+    path("users/", UserListView.as_view()),
 ]

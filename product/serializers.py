@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import *
+from .models import Category, Product, ProductImage, Basket
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta: 
@@ -13,7 +13,7 @@ class ProductSerializer(serializers.ModelSerializer):
         repr['category'] = CategorySerializer(instance.category).data['title']
         return repr
     
-class ProductList(serializers.ModelSerializer): 
+class ProductListSerializer(serializers.ModelSerializer): 
     class Meta: 
         models = Product
         fields = 'title','image', 'price', 'category',
@@ -32,3 +32,10 @@ class ProductImageSerializer(serializers.ModelSerializer):
     class Meta: 
         models = ProductImage
         fields = '__all__'
+
+
+class BasketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Basket
+        fields = ['user', 'product', 'quantity', 'price', 'created_at']
+

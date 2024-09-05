@@ -1,16 +1,15 @@
-from rest_framework.routers import DefaultRouter
+# product/urls.py
 from django.urls import path, include
-
-from .views import *
+from rest_framework.routers import DefaultRouter
+from .views import CategoryViewSet, ProductViewSet, ProductImageView
+from .views import AddToBasketView
 
 router = DefaultRouter()
-
-router.register('products', ProductViewSet)
-router.register('categories', CategoryViewSet)
+router.register('categories', CategoryViewSet, basename='category')
+router.register('products', ProductViewSet, basename='product')
 
 urlpatterns = [
-    path('products/add-product-image/', ProductImageView.as_view()),
-    path('', include(router.urls)),
-    path('products/', ProductViewSet.as_view({'get':'list','post':'create'})),
-    path('products/<slug:pk>', ProductViewSet.as_view({'get':'retrieve', 'put':'update'}))
+    path('', include(router.urls)),  
+    path('product-images/', ProductImageView.as_view(), name='product-image-create'),
+    path('basket/add/<int:product_id>/', AddToBasketView.as_view(), name='add-to-basket')
 ]
